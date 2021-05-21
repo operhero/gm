@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>id</th>
+        <th>数量</th>
+    </tr>
+    <tr  th:each="item,userStat : ${ht}" >
+        <td th:text="${userStat.current.key}"></td>
+        <td th:text="${userStat.current.value}"></td>
+    </tr>
+</table>
+
+<input type="hidden"  id="id_user" th:value="${user}"/>
+<input type="hidden"  id="id_game" th:value="${game}"/>
+<input type="hidden"  id="id_date" th:value="${date}"/>
+
+<div id="main" style="width: 600px;height:400px;"></div>
+<div id="money" style="width: 1000px;height:400px;"></div>
+<script th:inline="javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var moneyChart = echarts.init(document.getElementById('money'));
+    var user = [[${user}]];
+    var game = [[${game}]];
+    var date = [[${date}]];
+    var mdate = [[${mdate}]];
+    var mmoney = [[${mmoney}]];
+    var mtotal = [[${mtotal}]];
+
+    // 指定图表的配置项和数据
+    option = {
+        title: {
+            text: '日活跃统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['用户', '游戏局数']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: date
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '用户',
+                type: 'line',
+                stack: '总量',
+                data: user
+            },
+            {
+                name: '游戏局数',
+                type: 'line',
+                stack: '总量',
+                data: game
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+     myChart.setOption(option);
+
+    option2 = {
+        title: {
+            text: mtotal
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['消费']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: mdate
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '消费',
+                type: 'line',
+                stack: '总量',
+                data: mmoney
+            }
+        ]
+    };
+    moneyChart.setOption(option2);
+</script>
+</body>
+</html>
